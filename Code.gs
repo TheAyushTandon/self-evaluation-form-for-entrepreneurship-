@@ -146,6 +146,7 @@ function buildLeaderboard(sheet) {
       submissionId: row[1],
       name: row[2],
       department: row[3],
+      email: row[4],
       score: Number(row[totalScoreCol - 1]),
       profile: row[totalScoreCol],
     }));
@@ -156,7 +157,17 @@ function buildLeaderboard(sheet) {
     return new Date(a.timestamp) - new Date(b.timestamp);
   });
 
-  return entries.map((e, i) => ({
+  const uniqueEntries = [];
+  const seenEmails = new Set();
+  entries.forEach((e) => {
+    const emailKey = String(e.email).trim().toLowerCase();
+    if (!seenEmails.has(emailKey)) {
+      seenEmails.add(emailKey);
+      uniqueEntries.push(e);
+    }
+  });
+
+  return uniqueEntries.map((e, i) => ({
     rank: i + 1,
     name: e.name,
     department: e.department,
@@ -177,7 +188,12 @@ function updateRanks(sheet) {
   const data = sheet.getRange(2, 1, lastRow - 1, totalScoreCol + 4).getValues();
 
   const rows = data
-    .map((row, i) => ({ rowIndex: i + 2, timestamp: row[0], score: Number(row[totalScoreCol - 1]) }))
+    .map((row, i) => ({
+      rowIndex: i + 2,
+      timestamp: row[0],
+      email: row[4],
+      score: Number(row[totalScoreCol - 1])
+    }))
     .filter((r) => r.timestamp);
 
   rows.sort((a, b) => {
@@ -185,8 +201,17 @@ function updateRanks(sheet) {
     return new Date(a.timestamp) - new Date(b.timestamp);
   });
 
-  rows.forEach((row, i) => {
-    sheet.getRange(row.rowIndex, rankCol).setValue(i + 1);
+  const seenEmails = new Set();
+  let currentRank = 1;
+  rows.forEach((row) => {
+    const emailKey = String(row.email).trim().toLowerCase();
+    if (!seenEmails.has(emailKey)) {
+      seenEmails.add(emailKey);
+      sheet.getRange(row.rowIndex, rankCol).setValue(currentRank);
+      currentRank++;
+    } else {
+      sheet.getRange(row.rowIndex, rankCol).setValue(""); // duplicate entry gets no rank value
+    }
   });
 }
 
@@ -196,19 +221,31 @@ function getStats(sheet) {
   if (lastRow <= 1) return { average: 0, highest: 0, total: 0 };
 
   const totalScoreCol = 60;
-  const scores = sheet
-    .getRange(2, totalScoreCol, lastRow - 1, 1)
-    .getValues()
-    .flat()
-    .filter((v) => v !== "" && v !== null && !isNaN(Number(v)))
-    .map(Number);
+  const data = sheet.getRange(2, 1, lastRow - 1, totalScoreCol + 4).getValues();
 
-  if (scores.length === 0) return { average: 0, highest: 0, total: 0 };
+  const rows = data
+    .filter((row) => row[0])
+    .map((row) => ({
+      email: row[4],
+      score: Number(row[totalScoreCol - 1])
+    }));
+
+  const uniqueScores = [];
+  const seenEmails = new Set();
+  rows.forEach((row) => {
+    const emailKey = String(row.email).trim().toLowerCase();
+    if (!seenEmails.has(emailKey)) {
+      seenEmails.add(emailKey);
+      uniqueScores.push(row.score);
+    }
+  });
+
+  if (uniqueScores.length === 0) return { average: 0, highest: 0, total: 0 };
 
   return {
-    average: Math.round(scores.reduce((s, v) => s + v, 0) / scores.length),
-    highest: Math.max(...scores),
-    total: scores.length,
+    average: Math.round(uniqueScores.reduce((s, v) => s + v, 0) / uniqueScores.length),
+    highest: Math.max(...uniqueScores),
+    total: uniqueScores.length,
   };
 }
 
