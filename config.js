@@ -6,7 +6,7 @@
 
 const CONFIG = {
   // 🔑 Paste your Google Apps Script Web App URL here after deployment
-  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycby6tz0eu9nmB7E5RxGwaCY1wqujOZ98vocAF5-RQr1gg0Un9gxSNGwZrlLfLJwmnDOFtQ/exec",
+  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzqbisW6pGotXVCsCzLXIC3JCetgS24y_fcDoLqOA93QgaaxqQIcDgY4DfkPKMu8IbQuw/exec",
 
   // App metadata
   APP_NAME: "Entrepreneurial Teaching Canvas",
