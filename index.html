@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrepreneurial Teaching Canvas — Self-Assessment</title>
+  <meta name="description" content="A premium self-evaluation platform for faculty members to measure and grow their entrepreneurial teaching practices." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Submit Overlay -->
+<div id="submit-overlay">
+  <div class="submit-spinner"></div>
+  <p style="color:var(--text-secondary);font-size:0.95rem;font-weight:600;">Calculating your teaching profile...</p>
+</div>
+
+<!-- Top Bar -->
+<header class="top-bar" id="top-bar">
+  <div class="top-bar-inner">
+    <div class="logo-mark">
+      <div class="logo-icon">✦</div>
+      ETC Assessment
+    </div>
+    <div class="progress-pill" id="progress-label"></div>
+  </div>
+  <!-- Progress Bar -->
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+</header>
+
+<!-- App Shell -->
+<div id="app">
+
+  <!-- ══════════════════════════════════════
+       SCREEN 1 — Landing
+  ══════════════════════════════════════ -->
+  <section class="screen active" id="screen-landing">
+    <div style="position:relative;width:100%;display:flex;flex-direction:column;align-items:center;padding-top:20px;text-align:center;">
+
+      <span class="overline stagger-item">Faculty Self-Assessment</span>
+
+      <h1 class="display stagger-item" style="max-width:600px;margin-bottom:20px;">
+        Entrepreneurial<br/>Teaching Canvas
+      </h1>
+
+      <p class="subheadline stagger-item" style="max-width:480px;margin-bottom:36px;">
+        A premium, research-backed assessment of your entrepreneurial teaching practices —
+        built to surface your strengths, identify growth opportunities, and rank you among your peers.
+      </p>
+
+      <div class="flex gap-8 stagger-item" style="flex-wrap:wrap;justify-content:center;margin-bottom:40px;">
+        <div class="feature-pill"><span>26 Dimensions</span></div>
+        <div class="feature-pill"><span>~10 minutes</span></div>
+        <div class="feature-pill"><span>Live Leaderboard</span></div>
+        <div class="feature-pill"><span id="landing-participants">Faculty Portal</span></div>
+      </div>
+
+      <button class="btn btn-primary btn-lg stagger-item" id="btn-start">
+        Begin Assessment →
+      </button>
+
+      <div class="mt-40 w-full" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center;">
+        <div class="card card-sm stagger-item">
+          <div style="font-size:0.9rem;font-weight:700;margin-bottom:6px;color:var(--accent);">Reflection</div>
+          <div style="font-size:0.78rem;color:var(--text-secondary);">26 research-backed practice dimensions</div>
+        </div>
+        <div class="card card-sm stagger-item">
+          <div style="font-size:0.9rem;font-weight:700;margin-bottom:6px;color:var(--accent);">Insights</div>
+          <div style="font-size:0.78rem;color:var(--text-secondary);">Curated professional growth recommendations</div>
+        </div>
+        <div class="card card-sm stagger-item">
+          <div style="font-size:0.9rem;font-weight:700;margin-bottom:6px;color:var(--accent);">Leaderboard</div>
+          <div style="font-size:0.78rem;color:var(--text-secondary);">See how you compare with colleagues</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SCREEN 2 — Faculty Information
+  ══════════════════════════════════════ -->
+  <section class="screen" id="screen-info">
+    <div class="w-full" style="max-width:600px;">
+      <span class="overline">Step 1 of 3</span>
+      <h2 class="headline mb-8">Your Information</h2>
+      <p class="subheadline mb-24" style="max-width:460px;">
+        Your details are used only to personalise your assessment and leaderboard profile.
+      </p>
+
+      <div class="card">
+        <div class="form-grid">
+          <div class="input-group" style="grid-column:1/-1;">
+            <label class="input-label" for="info-name">Full Name *</label>
+            <input class="input-field" type="text" id="info-name" placeholder="Dr. Jane Smith" autocomplete="name" />
+          </div>
+          <div class="input-group" style="grid-column:1/-1;">
+            <label class="input-label" for="info-email">Email Address *</label>
+            <input class="input-field" type="email" id="info-email" placeholder="jane.smith@university.edu" autocomplete="email" />
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="info-phone">Phone Number *</label>
+            <input class="input-field" type="tel" id="info-phone" placeholder="9876543210" autocomplete="tel" />
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="info-dept">Department *</label>
+            <input class="input-field" type="text" id="info-dept" placeholder="Management Studies" />
+          </div>
+        </div>
+
+        <div class="mt-24">
+          <button class="btn btn-primary btn-full btn-lg" id="btn-info-next">
+            Continue to Declaration →
+          </button>
+        </div>
+      </div>
+
+      <p style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:16px;">
+        🔒 Your data is stored securely and never shared.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SCREEN 3 — Declaration
+  ══════════════════════════════════════ -->
+  <section class="screen" id="screen-declaration">
+    <div class="w-full" style="max-width:600px;">
+      <span class="overline">Step 2 of 3</span>
+      <h2 class="headline mb-8">Declaration</h2>
+      <p class="subheadline mb-24" style="max-width:460px;">
+        Please read and confirm the declaration to start.
+      </p>
+
+      <div class="card card-glow" style="margin-bottom:20px;">
+        <span style="font-size:0.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:block;">Declaration of Integrity</span>
+        <p style="font-size:0.95rem;color:var(--text-secondary);line-height:1.7;font-style:italic;border-left:3px solid var(--accent);padding-left:16px;">
+          "This assessment is intended for honest self-reflection. Your responses will help you understand your current entrepreneurial teaching practices and identify opportunities for professional growth. Please answer each question truthfully based on your regular teaching approach."
+        </p>
+        <div class="divider mt-16" style="margin-bottom:16px;"></div>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">
+          Welcome, <strong style="color:var(--text-primary);" id="declaration-name">Faculty</strong>. Your responses are for professional development purposes.
+        </p>
+      </div>
+
+      <div class="checkbox-wrapper" id="decl-wrap">
+        <div class="custom-checkbox" id="decl-checkbox">
+          <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+            <path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.55;">
+          I confirm that I will complete this self-assessment honestly.
+        </p>
+      </div>
+
+      <div class="flex gap-12 mt-24">
+        <button class="btn btn-ghost" id="btn-decl-back" style="flex:1;">← Back</button>
+        <button class="btn btn-primary" id="btn-decl-next" style="flex:2;" disabled>
+          Begin Assessment →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SCREEN 4 — Question
+  ══════════════════════════════════════ -->
+  <section class="screen" id="screen-question">
+    <div class="w-full" style="max-width:680px;" id="q-anim-wrapper">
+
+      <!-- Dimension badge -->
+      <div class="dimension-badge stagger-item" id="q-dimension">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+        <span class="dim-id">A</span>
+      </div>
+
+      <!-- Counter + question -->
+      <div class="flex justify-between items-center mb-16">
+        <h2 class="headline" style="font-size:1.25rem;font-weight:700;line-height:1.45;flex:1;margin-right:16px;" id="q-text"></h2>
+        <span style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;font-weight:700;" id="q-counter"></span>
+      </div>
+
+      <!-- Options -->
+      <div class="options-stack" id="q-options"></div>
+
+      <!-- Navigation -->
+      <div class="flex gap-12 mt-24">
+        <button class="btn btn-ghost" id="btn-q-back" style="display:none;">← Back</button>
+        <button class="btn btn-primary" id="btn-q-next" style="flex:1;" disabled>
+          Continue →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       SCREEN 5 — Result
+  ══════════════════════════════════════ -->
+  <section class="screen" id="screen-result">
+    <div class="w-full" style="max-width:680px;">
+
+      <!-- Hero score block -->
+      <div class="card card-glow text-center stagger-item" style="margin-bottom:20px;">
+        <span class="overline">Your Assessment Result</span>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;" id="result-rank-line"></p>
+
+        <div class="score-big stagger-item" id="result-score-num" style="color:var(--accent);">0</div>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:20px;">out of 78 points</p>
+
+        <div class="score-meter-container">
+          <div class="score-meter-track">
+            <div class="score-meter-fill" id="result-meter-fill" style="width:0%;"></div>
+          </div>
+          <div class="score-labels">
+            <span>−26 (min)</span>
+            <span>+78 (max)</span>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:center;margin-top:16px;">
+          <div class="profile-badge" id="result-profile-badge">
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full mt-24" id="btn-download-cert" style="background: var(--accent); color: white;">
+          Download Result Certificate (PDF)
+        </button>
+
+        <button class="btn btn-ghost btn-full mt-12" id="btn-download-report" style="border-color: var(--accent); color: var(--accent-hover);">
+          Download Summary Report (.txt)
+        </button>
+      </div>
+
+      <!-- Stats row -->
+      <div class="flex gap-12 stagger-item" style="margin-bottom:20px;">
+        <div class="stat-pill">
+          <span class="stat-value" id="stat-max">78</span>
+          <span class="stat-label">Max Possible</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-value" id="stat-pct">—</span>
+          <span class="stat-label">Percentile</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-value" id="stat-parts">—</span>
+          <span class="stat-label">Participants</span>
+        </div>
+      </div>
+
+      <!-- Profile description -->
+      <div class="card stagger-item" style="margin-bottom:20px;">
+        <span class="overline">Teaching Profile</span>
+        <p class="subheadline" id="result-profile-desc"></p>
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:12px;">
+          Submission ID: <span id="result-sub-id" style="color:var(--accent);font-weight:700;"></span>
+        </p>
+      </div>
+
+      <!-- Strengths -->
+      <div class="card stagger-item" style="margin-bottom:20px;">
+        <span class="overline" style="margin-bottom:12px;display:block;">Current Strengths</span>
+        <div class="chips-wrap" id="result-strengths"></div>
+      </div>
+
+      <!-- Growth Areas -->
+      <div class="card stagger-item" style="margin-bottom:20px;">
+        <span class="overline" style="margin-bottom:12px;display:block;">Growth Opportunities</span>
+        <div class="chips-wrap" id="result-growth"></div>
+      </div>
+
+      <!-- Recommendations -->
+      <div class="stagger-item" style="margin-bottom:20px;">
+        <span class="overline" style="margin-bottom:12px;display:block;">Personalised Growth Guide</span>
+        <div style="display:flex;flex-direction:column;gap:12px;" id="result-recs"></div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="stagger-item" style="margin-bottom:20px;">
+        <span class="overline" style="margin-bottom:12px;display:block;">Faculty Leaderboard</span>
+        <div style="display:flex;flex-direction:column;gap:8px;" id="result-leaderboard"></div>
+      </div>
+
+      <!-- Completion message -->
+      <div class="card text-center stagger-item" style="background:var(--accent-light);border-color:var(--accent);">
+        <h3 style="font-family:'Dosis',sans-serif;font-weight:700;margin-bottom:8px;color:var(--accent-hover);">Thank you</h3>
+        <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.65;max-width:420px;margin:0 auto;">
+          Your results have been recorded. Use these insights to drive meaningful improvement in your entrepreneurial teaching practice.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- /#app -->
+
+<!-- Certificate Print View -->
+<div id="certificate-print-area">
+  <div class="certificate-border">
+    <div class="certificate-content">
+      <div class="cert-header">
+        <div class="cert-logo-icon">✦</div>
+        <h2>Entrepreneurial Teaching Canvas</h2>
+        <p class="cert-subtitle">Certificate of Self-Evaluation</p>
+      </div>
+      <div class="cert-body">
+        <p class="cert-presented">This certificate is proudly presented to</p>
+        <h1 class="cert-name" id="cert-faculty-name">Dr. Anita Sharma</h1>
+        <p class="cert-text">
+          for successfully completing the Entrepreneurial Teaching Canvas Self-Assessment, demonstrating a commitment to adopting innovative, active, and impactful teaching methodologies.
+        </p>
+        <div class="cert-meta-grid">
+          <div>
+            <span class="cert-meta-label">Teaching Profile</span>
+            <span class="cert-meta-val" id="cert-profile-title">Innovation Champion</span>
+          </div>
+          <div>
+            <span class="cert-meta-label">Total Score</span>
+            <span class="cert-meta-val" id="cert-score">72 / 78</span>
+          </div>
+          <div>
+            <span class="cert-meta-label">Date of Evaluation</span>
+            <span class="cert-meta-val" id="cert-date">2026-07-08</span>
+          </div>
+        </div>
+      </div>
+      <div class="cert-footer">
+        <div class="cert-sig-block">
+          <div class="cert-sig-line"></div>
+          <span>ETC Assessment Committee</span>
+        </div>
+        <div class="cert-id-block" style="text-align: right;">
+          <span style="font-size: 0.72rem; color: var(--text-muted); display: block; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Verification ID</span>
+          <span style="font-family: monospace; font-size: 0.9rem; font-weight: 700; color: var(--text-primary);" id="cert-verification-id">ETC-DEMO</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
