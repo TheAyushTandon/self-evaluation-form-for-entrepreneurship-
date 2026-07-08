@@ -305,7 +305,7 @@ async function submitAssessment() {
     } else {
       const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload),
       });
       result = await res.json();
