@@ -1,5 +1,5 @@
 // =========================================================
-// ETTLQ Assessment Questions — 26 Dimensions (A–Z)
+// ETTLQ Diagnostic Questions — 26 Dimensions (A–Z)
 // =========================================================
 
 const ETC_QUESTIONS = [
@@ -240,7 +240,7 @@ const ETC_QUESTIONS = [
     options: [
       { score: -1, color: "red", text: "Most of your student assignments are identical standard textbook/AI variants." },
       { score: 1, color: "yellow", text: "You always mention that there is extra credit for \"being creative\" or \"trying something unique\" on your assignment brief without defining what uniqueness means." },
-      { score: 3, color: "green", text: "Your assessment rubric allocates 15% of the total score exclusively to the \"Differentiator Factor.\"" }
+      { score: 3, color: "green", text: "Your diagnostic rubric allocates 15% of the total score exclusively to the \"Differentiator Factor.\"" }
     ]
   },
   {
@@ -280,7 +280,7 @@ function getTeachingProfile(score) {
     return {
       title: "The Transitioning Launchpad",
       range: "40–60",
-      description: "You have successfully broken the traditional teaching pattern. Your course design has strong foundational elements of action-bias, and you are using strategies like team clusters or basic practical goals. However, the ghost of legacy academic formatting still pulls you back-i.e, you are likely still spending significant energy on lectures and assessment.",
+      description: "You have successfully broken the traditional teaching pattern. Your course design has strong foundational elements of action-bias, and you are using strategies like team clusters or basic practical goals. However, the ghost of legacy academic formatting still pulls you back-i.e, you are likely still spending significant energy on lectures and diagnostic.",
       wayForward: "You have done the hardest part: breaking the old rhythm. Your students are already getting a taste of learning-by-doing. To move up, focus on bootcamp-format course design. Let go of the 50-minute talk track by building tighter At-Home Prep for students, and activate an effective Peer Review System to take the heavy grading load off your shoulders.",
       color: "#f59e0b",
       tier: "silver"
