@@ -553,20 +553,20 @@ function downloadPDF() {
   let answerRows = '';
   ETC_QUESTIONS.forEach((q, idx) => {
     const myAns = state.answers.find(a => a.id === q.id);
-    const selectedText = myAns ? myAns.label : '(not answered)';
-    const selectedColor = myAns ? myAns.color : 'red';
-    const bg = colorMap[selectedColor] || '#fff';
-    const border = borderMap[selectedColor] || '#ccc';
+    const selectedText = myAns ? myAns.label : '';
 
-    answerRows += `
-      <div style="border:1px solid #e2e8f0; border-radius:8px; margin-bottom:12px; overflow:hidden;">
-        <div style="background:#f8f9fa; padding:10px 14px; font-size:12px; font-weight:700; color:#0f172a; border-bottom:1px solid #e2e8f0; letter-spacing:0.3px;">
-          ${idx + 1}. ${q.id}. ${q.dimension}
-        </div>
-        <div style="padding:10px 14px; background:${bg}; border-left:4px solid ${border}; font-size:12px; color:#1e293b; line-height:1.55;">
-          ${selectedText}
-        </div>
-      </div>`;
+    const orderedOptions = ['green', 'yellow', 'red'].map(c => q.options.find(o => o.color === c)).filter(Boolean);
+
+    let optionRows = '';
+    orderedOptions.forEach(opt => {
+      const isSelected = selectedText === opt.text;
+      const bg     = isSelected ? (colorMap[opt.color] || '#fff') : '#ffffff';
+      const border  = isSelected ? (borderMap[opt.color] || '#ccc') : '#e2e8f0';
+      const badge   = isSelected ? `<span style="margin-left:8px;font-size:10px;font-weight:700;color:${borderMap[opt.color]};background:${colorMap[opt.color]};padding:2px 8px;border-radius:20px;white-space:nowrap;">&#10003; Your Choice</span>` : '';
+      optionRows += `<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 12px;background:${bg};border-left:3px solid ${border};border-bottom:1px solid #f1f5f9;font-size:11.5px;color:#334155;line-height:1.5;"><span style="flex:1;">${opt.text}</span>${badge}</div>`;
+    });
+
+    answerRows += `<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:14px;overflow:hidden;"><div style="background:#f8f9fa;padding:9px 14px;font-size:12px;font-weight:700;color:#0f172a;border-bottom:1px solid #e2e8f0;letter-spacing:0.3px;">${idx + 1}. ${q.id}. ${q.dimension}</div>${optionRows}</div>`;
   });
 
   const html = `<!DOCTYPE html>
