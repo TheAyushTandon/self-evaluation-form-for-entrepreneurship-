@@ -431,7 +431,7 @@ function renderResult(r) {
     item.className = 'review-item';
     item.innerHTML = `
       <div class="review-header">
-        <span class="review-dimension-title">${getSvgIcon(q.icon)} ${q.id}. ${q.dimension}</span>
+        <span class="review-dimension-title">${q.id}. ${q.dimension}</span>
       </div>
       <div class="review-options-list">
         <div class="review-option green-opt ${isGreenSelected ? 'selected-ans' : ''}">
@@ -533,6 +533,106 @@ function showSuccessToast() {
     t.style.transform = 'translate(-50%, 20px)';
     setTimeout(() => t.remove(), 400);
   }, 4500);
+}
+
+// ── PDF Download ─────────────────────────────────────────
+function downloadPDF() {
+  const r = state.result;
+  if (!r) return;
+
+  const profile = getTeachingProfile(r.score);
+  const faculty = state.faculty;
+
+  // Build color legend rows
+  const colorMap = { green: '#d1fae5', yellow: '#fef9c3', red: '#fee2e2' };
+  const borderMap = { green: '#10b981', yellow: '#f59e0b', red: '#ef4444' };
+  const labelMap  = { green: 'Green — Absolutely like an entrepreneurial Educator',
+                      yellow: 'Yellow — Somewhat like an entrepreneurial Educator',
+                      red:    'Red — Totally unlike an entrepreneurial Educator' };
+
+  let answerRows = '';
+  ETC_QUESTIONS.forEach((q, idx) => {
+    const myAns = state.answers.find(a => a.id === q.id);
+    const selectedText = myAns ? myAns.label : '(not answered)';
+    const selectedColor = myAns ? myAns.color : 'red';
+    const bg = colorMap[selectedColor] || '#fff';
+    const border = borderMap[selectedColor] || '#ccc';
+
+    answerRows += `
+      <div style="border:1px solid #e2e8f0; border-radius:8px; margin-bottom:12px; overflow:hidden;">
+        <div style="background:#f8f9fa; padding:10px 14px; font-size:12px; font-weight:700; color:#0f172a; border-bottom:1px solid #e2e8f0; letter-spacing:0.3px;">
+          ${idx + 1}. ${q.id}. ${q.dimension}
+        </div>
+        <div style="padding:10px 14px; background:${bg}; border-left:4px solid ${border}; font-size:12px; color:#1e293b; line-height:1.55;">
+          ${selectedText}
+        </div>
+      </div>`;
+  });
+
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ETTLQ Results — ${faculty.name}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 13px; color: #0f172a; padding: 32px; max-width: 740px; margin: 0 auto; }
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .meta { font-size: 12px; color: #64748b; margin-bottom: 24px; }
+    .score-box { background: #ecfdf5; border: 1px solid #10b981; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; }
+    .score-num { font-size: 52px; font-weight: 800; color: #059669; line-height: 1; }
+    .score-detail h2 { font-size: 14px; font-weight: 700; color: #065f46; margin-bottom: 4px; }
+    .score-detail p { font-size: 12px; color: #047857; line-height: 1.5; }
+    .legend { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; }
+    .legend-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #475569; margin-bottom: 8px; }
+    .legend-row { font-size: 12px; color: #475569; margin-bottom: 4px; }
+    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #475569; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; }
+    @media print {
+      body { padding: 16px; }
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <h1>ETTLQ Diagnostic Results</h1>
+  <div class="meta">
+    ${faculty.name} &nbsp;·&nbsp; ${faculty.email} &nbsp;·&nbsp; ${faculty.department}
+    &nbsp;·&nbsp; Generated: ${new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' })}
+  </div>
+
+  <div class="score-box">
+    <div class="score-num">${r.score}</div>
+    <div class="score-detail">
+      <h2>Your ETTLQ Score</h2>
+      <p>${profile.title}</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-title">What does each color mean?</div>
+    <div class="legend-row">🟢 <strong>Green:</strong> Absolutely like an entrepreneurial Educator</div>
+    <div class="legend-row">🟡 <strong>Yellow:</strong> Somewhat like an entrepreneurial Educator</div>
+    <div class="legend-row">🔴 <strong>Red:</strong> Totally unlike an entrepreneurial Educator</div>
+  </div>
+
+  <div class="section-title">Your Responses — All 26 Dimensions</div>
+  ${answerRows}
+
+  <script>window.onload = function(){ window.print(); }<\/script>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, '_blank');
+  if (!win) {
+    // Fallback if popup blocked
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ETTLQ-Results-${faculty.name.replace(/\s+/g, '-')}.html`;
+    a.click();
+  }
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
 // ── Bootstrap ────────────────────────────────────────────
