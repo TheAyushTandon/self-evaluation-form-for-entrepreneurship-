@@ -356,19 +356,36 @@ async function submitAssessment() {
   };
 
   let result;
+  const MAX_RETRIES = 3;
 
   try {
     if (!CONFIG.APPS_SCRIPT_URL || CONFIG.APPS_SCRIPT_URL.includes('YOUR_')) {
       // Demo mode — calculate locally
       result = buildLocalResult(sortedAnswers, completionTime);
     } else {
-      const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload),
-      });
-      result = await res.json();
-      if (!result.success) throw new Error(result.error || 'Submission failed.');
+      let lastError = null;
+      for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(payload),
+        });
+        result = await res.json();
+
+        if (result.success) break; // done
+
+        if (result.retryable && attempt < MAX_RETRIES) {
+          // Server busy — wait 2 seconds and retry silently
+          await new Promise(r => setTimeout(r, 2000));
+          lastError = result.error;
+          continue;
+        }
+
+        throw new Error(result.error || 'Submission failed.');
+      }
+      if (!result || !result.success) {
+        throw new Error(lastError || 'Submission failed after multiple attempts.');
+      }
     }
   } catch (err) {
     overlay.classList.remove('active');

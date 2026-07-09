@@ -48,9 +48,8 @@ function getHeaders() {
   return [...base, ...questionHeaders, ...end];
 }
 
-// ── Sheet initialiser ─────────────────────────────────────
-function initSheet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+// ── Sheet initialiser (must be called inside a lock) ──────
+function initSheet(ss) {
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
@@ -64,20 +63,13 @@ function initSheet() {
   return sheet;
 }
 
-// ── Next submission ID ────────────────────────────────────
-function getNextSubmissionId(sheet) {
-  const lastRow = sheet.getLastRow();
-  if (lastRow <= 1) return SUBMISSION_PREFIX + "00001";
-  const idCol = 2; // Submission ID column
-  const ids = sheet
-    .getRange(2, idCol, lastRow - 1, 1)
-    .getValues()
-    .flat()
-    .filter((v) => v && String(v).startsWith(SUBMISSION_PREFIX));
-  if (ids.length === 0) return SUBMISSION_PREFIX + "00001";
-  const numbers = ids.map((id) => parseInt(String(id).replace(SUBMISSION_PREFIX, ""), 10));
-  const next = Math.max(...numbers) + 1;
-  return SUBMISSION_PREFIX + String(next).padStart(5, "0");
+// ── Submission ID: timestamp + random — no race condition ─
+// Format: ETTLQ-20240709-A3F7
+function generateSubmissionId() {
+  const now = new Date();
+  const date = Utilities.formatDate(now, Session.getScriptTimeZone(), "yyyyMMdd");
+  const rand = Math.random().toString(36).substr(2, 4).toUpperCase();
+  return `${SUBMISSION_PREFIX}${date}-${rand}`;
 }
 
 // ── Score calculation ─────────────────────────────────────
@@ -97,23 +89,15 @@ function analyzeAnswers(answers) {
   const scored = answers.map((a) => ({
     dimension: a.dimension,
     score: a.score !== undefined ? Number(a.score) : 0,
-    label: a.label,
   }));
 
-  scored.sort((a, b) => b.score - a.score);
+  const strengths   = scored.filter((a) => a.score === 3).map((a) => a.dimension);
+  const growthAreas = scored.filter((a) => a.score === -1).map((a) => a.dimension);
 
-  const strengths = scored.filter((a) => a.score === 3).map((a) => a.dimension);
-  const growthAreas = scored.filter((a) => a.score === -1);
-
-  return {
-    strengths,
-    growthAreas: growthAreas.map((a) => a.dimension),
-  };
+  return { strengths, growthAreas };
 }
 
-
-
-// ── CORS headers ──────────────────────────────────────────
+// ── CORS output ───────────────────────────────────────────
 function corsOutput(data) {
   const output = ContentService.createTextOutput(JSON.stringify(data));
   output.setMimeType(ContentService.MimeType.JSON);
@@ -136,7 +120,6 @@ function doPost(e) {
     if (!answers || answers.length !== 26) {
       return corsOutput({ success: false, error: "Incomplete assessment. All 26 questions are required." });
     }
-
     for (const a of answers) {
       const s = Number(a.score);
       if (s !== 3 && s !== 1 && s !== -1) {
@@ -144,17 +127,14 @@ function doPost(e) {
       }
     }
 
-    // --- Scoring ---
-    const totalScore = calculateScore(answers);
-    const profile = getTeachingProfile(totalScore);
+    // --- Scoring (done before the lock — pure CPU, no I/O) ---
+    const totalScore   = calculateScore(answers);
+    const profile      = getTeachingProfile(totalScore);
     const { strengths, growthAreas } = analyzeAnswers(answers);
+    const submissionId = generateSubmissionId();
+    const timestamp    = new Date();
 
-    // --- Sheet ---
-    const sheet = initSheet();
-    const submissionId = getNextSubmissionId(sheet);
-    const timestamp = new Date();
-
-    // Build row
+    // Build row (done before lock for speed)
     const row = [
       timestamp,
       submissionId,
@@ -164,21 +144,36 @@ function doPost(e) {
       faculty.phone.trim(),
       "TRUE",
     ];
-
-    // Add each answer (label + score)
     answers.forEach((a) => {
       row.push(a.label);
       row.push(a.score);
     });
-
-    // Tail columns
     row.push(totalScore);
     row.push(profile);
     row.push(strengths.join(", "));
     row.push(growthAreas.join(", "));
     row.push(completionTime || 0);
 
-    sheet.appendRow(row);
+    // --- Sheet write with lock (prevents concurrent corruption) ---
+    const lock = LockService.getScriptLock();
+    const acquired = lock.tryLock(8000); // wait up to 8 seconds for the lock
+
+    if (!acquired) {
+      // Another execution is holding the lock — ask the client to retry
+      return corsOutput({
+        success: false,
+        error: "Server is busy. Please wait a moment and try again.",
+        retryable: true,
+      });
+    }
+
+    try {
+      const ss    = SpreadsheetApp.getActiveSpreadsheet();
+      const sheet = initSheet(ss);
+      sheet.appendRow(row);
+    } finally {
+      lock.releaseLock();
+    }
 
     return corsOutput({
       success: true,
@@ -188,6 +183,7 @@ function doPost(e) {
       strengths,
       growthAreas,
     });
+
   } catch (err) {
     return corsOutput({ success: false, error: err.message });
   }
