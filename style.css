@@ -1,11 +1,11 @@
 /* =========================================================
-   ETC — Entrepreneurial Teaching Canvas
-   Premium Diagnostic Platform — Light Theme
+   ETC â€” Entrepreneurial Teaching Canvas
+   Premium Diagnostic Platform â€” Light Theme
    ========================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
-/* ── CSS Variables ──────────────────────────────────────── */
+/* â”€â”€ CSS Variables â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
   --bg-primary: #f8f9fa;
   --bg-secondary: #ffffff;
@@ -36,7 +36,7 @@
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Reset ──────────────────────────────────────────────── */
+/* â”€â”€ Reset â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *,
 *::before,
 *::after {
@@ -58,7 +58,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Background accents ─────────────────────────────────── */
+/* â”€â”€ Background accents â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 body::before {
   content: '';
   position: fixed;
@@ -70,7 +70,7 @@ body::before {
   pointer-events: none;
 }
 
-/* ── App shell ──────────────────────────────────────────── */
+/* â”€â”€ App shell â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 #app {
   position: relative;
   z-index: 1;
@@ -80,7 +80,7 @@ body::before {
   align-items: center;
 }
 
-/* ── Screens ────────────────────────────────────────────── */
+/* â”€â”€ Screens â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .screen {
   display: none;
   width: 100%;
@@ -108,7 +108,7 @@ body::before {
   }
 }
 
-/* ── Top logo bar ───────────────────────────────────────── */
+/* â”€â”€ Top logo bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .top-bar {
   width: 100%;
   position: sticky;
@@ -165,7 +165,7 @@ body::before {
   border-radius: var(--radius-full);
 }
 
-/* ── Progress bar ───────────────────────────────────────── */
+/* â”€â”€ Progress bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .progress-bar-track {
   width: 100%;
   height: 3px;
@@ -180,7 +180,7 @@ body::before {
   transition: width 0.4s ease;
 }
 
-/* ── Cards ──────────────────────────────────────────────── */
+/* â”€â”€ Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -200,7 +200,7 @@ body::before {
   box-shadow: var(--shadow-glow), var(--shadow-card);
 }
 
-/* ── Typography ─────────────────────────────────────────── */
+/* â”€â”€ Typography â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .display {
   font-family: 'Dosis', sans-serif;
   font-size: clamp(2rem, 5vw, 3rem);
@@ -242,7 +242,7 @@ body::before {
   display: block;
 }
 
-/* ── Buttons ────────────────────────────────────────────── */
+/* â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -293,7 +293,7 @@ body::before {
   width: 100%;
 }
 
-/* ── Inputs ─────────────────────────────────────────────── */
+/* â”€â”€ Inputs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -338,7 +338,7 @@ body::before {
   color: #ef4444;
 }
 
-/* ── Form grid ──────────────────────────────────────────── */
+/* â”€â”€ Form grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -352,7 +352,7 @@ body::before {
   }
 }
 
-/* ── Divider ────────────────────────────────────────────── */
+/* â”€â”€ Divider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .divider {
   width: 100%;
   height: 1px;
@@ -360,7 +360,7 @@ body::before {
   margin: 16px 0;
 }
 
-/* ── Checkbox ───────────────────────────────────────────── */
+/* â”€â”€ Checkbox â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .checkbox-wrapper {
   display: flex;
   align-items: flex-start;
@@ -409,7 +409,7 @@ body::before {
   display: block;
 }
 
-/* ── Answer Capsule Options ─────────────────────────────── */
+/* â”€â”€ Answer Capsule Options â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .options-stack {
   display: flex;
   flex-direction: column;
@@ -486,7 +486,7 @@ body::before {
   color: var(--text-secondary);
 }
 
-/* ── Question dimension badge ───────────────────────────── */
+/* â”€â”€ Question dimension badge â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .dimension-badge {
   display: inline-flex;
   align-items: center;
@@ -515,7 +515,7 @@ body::before {
   color: var(--accent);
 }
 
-/* ── Score meter ────────────────────────────────────────── */
+/* â”€â”€ Score meter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .score-meter-container {
   width: 100%;
   padding: 24px 0;
@@ -557,7 +557,7 @@ body::before {
   line-height: 1;
 }
 
-/* ── Profile badge ──────────────────────────────────────── */
+/* â”€â”€ Profile badge â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .profile-badge {
   display: inline-flex;
   align-items: center;
@@ -571,7 +571,7 @@ body::before {
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
-/* ── Strength & growth chips ────────────────────────────── */
+/* â”€â”€ Strength & growth chips â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .chips-wrap {
   display: flex;
   flex-wrap: wrap;
@@ -594,7 +594,7 @@ body::before {
   color: var(--accent-hover);
 }
 
-/* ── Recommendation card ────────────────────────────────── */
+/* â”€â”€ Recommendation card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .rec-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -634,7 +634,7 @@ body::before {
 }
 
 .rec-tip::before {
-  content: '•';
+  content: 'â€¢';
   color: var(--accent);
   font-weight: bold;
   font-size: 1.1rem;
@@ -643,7 +643,7 @@ body::before {
 }
 
 
-/* ── Submit animation overlay ───────────────────────────── */
+/* â”€â”€ Submit animation overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 #submit-overlay {
   position: fixed;
   inset: 0;
@@ -679,7 +679,7 @@ body::before {
   }
 }
 
-/* ── Confetti dot ───────────────────────────────────────── */
+/* â”€â”€ Confetti dot â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .confetti-dot {
   position: fixed;
   width: 6px;
@@ -702,7 +702,7 @@ body::before {
   }
 }
 
-/* ── Stat pill ──────────────────────────────────────────── */
+/* â”€â”€ Stat pill â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .stat-pill {
   display: flex;
   flex-direction: column;
@@ -730,7 +730,7 @@ body::before {
   text-align: center;
 }
 
-/* ── Step indicator ─────────────────────────────────────── */
+/* â”€â”€ Step indicator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .step-dots {
   display: flex;
   align-items: center;
@@ -753,7 +753,7 @@ body::before {
   background: var(--accent);
 }
 
-/* ── Utility ────────────────────────────────────────────── */
+/* â”€â”€ Utility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mt-4 {
   margin-top: 4px;
 }
@@ -838,7 +838,7 @@ body::before {
   display: none !important;
 }
 
-/* ── Certificate Styles ─────────────────────────────────── */
+/* â”€â”€ Certificate Styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 #certificate-print-area {
   display: none;
   font-family: 'Inter', sans-serif;
@@ -1003,7 +1003,7 @@ body::before {
   font-weight: bold;
 }
 
-/* ── Print Media Overrides ──────────────────────────────── */
+/* â”€â”€ Print Media Overrides â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media print {
   @page {
     size: A4 landscape;
@@ -1038,7 +1038,7 @@ body::before {
   }
 }
 
-/* ── Question Slide Transitions ─────────────────────────── */
+/* â”€â”€ Question Slide Transitions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 #q-anim-wrapper {
   transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.38s cubic-bezier(0.25, 1, 0.5, 1);
   opacity: 1;
@@ -1067,7 +1067,7 @@ body::before {
   transition: none !important;
 }
 
-/* ── Review Answer Key Styles ───────────────────────────── */
+/* â”€â”€ Review Answer Key Styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .review-item {
   border-bottom: 1px solid var(--border);
   padding-bottom: 24px;
@@ -1183,7 +1183,7 @@ body::before {
   color: white;
 }
 
-/* ── Question Navigator Grid ────────────────────────────── */
+/* â”€â”€ Question Navigator Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .q-grid {
   display: grid;
   grid-template-columns: repeat(13, 1fr);
@@ -1234,4 +1234,29 @@ body::before {
 
 .q-grid-item.attempted.active {
   box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--accent);
+}
+
+/* ── Toast Alert ────────────────────────────────────────── */
+@keyframes toastSlideUp {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.toast-success {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  color: var(--text-secondary);
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  z-index: 9999;
+  box-shadow: var(--shadow-elevated);
+  animation: toastSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  max-width: 90vw;
+  width: 420px;
+  text-align: center;
 }

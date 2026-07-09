@@ -451,6 +451,9 @@ function renderResult(r) {
 
   // Confetti
   launchConfetti();
+  
+  // Success Toast
+  showSuccessToast();
 }
 
 
@@ -504,6 +507,27 @@ function showErrorToast(msg) {
   t.textContent = '⚠ ' + msg;
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 5000);
+}
+
+function showSuccessToast() {
+  const t = document.createElement('div');
+  t.className = 'toast-success';
+  t.innerHTML = `
+    <h3 style="font-family:'Dosis',sans-serif;font-weight:700;margin-bottom:6px;color:var(--accent-hover);font-size:1.1rem;">
+      Evaluation Recorded
+    </h3>
+    <p style="line-height:1.5;margin:0;">
+      Thank you for completing the Entrepreneurial Teaching & Transformative Learning Quotient diagnostic. Your results have been compiled successfully.
+    </p>
+  `;
+  document.body.appendChild(t);
+  
+  setTimeout(() => {
+    t.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    t.style.opacity = '0';
+    t.style.transform = 'translate(-50%, 20px)';
+    setTimeout(() => t.remove(), 400);
+  }, 4500);
 }
 
 // ── Bootstrap ────────────────────────────────────────────
