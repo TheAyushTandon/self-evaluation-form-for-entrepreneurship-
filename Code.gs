@@ -164,9 +164,9 @@ function updateRanks(sheet) {
   if (lastRow <= 1) return;
 
   const totalScoreCol = 60;
-  const rankCol = totalScoreCol + 3; // Leaderboard Rank column
+  const rankCol = totalScoreCol + 4; // Leaderboard Rank is col 64 (7 base + 52 answers + 4 tail cols before rank)
 
-  const data = sheet.getRange(2, 1, lastRow - 1, totalScoreCol + 4).getValues();
+  const data = sheet.getRange(2, 1, lastRow - 1, totalScoreCol + 5).getValues();
 
   const rows = data
     .map((row, i) => ({
@@ -306,7 +306,7 @@ function doPost(e) {
     const lastRow = sheet.getLastRow();
     const allIds = sheet.getRange(2, idCol, lastRow - 1, 1).getValues().flat();
     const myRowIndex = allIds.indexOf(submissionId) + 2;
-    const rankCol = 63; // Leaderboard Rank column index
+    const rankCol = 64; // Leaderboard Rank: col 64 (7 base + 52 answers + Total Score + Profile + Strengths + GrowthAreas + Rank)
     const myRank = sheet.getRange(myRowIndex, rankCol).getValue();
 
     // Leaderboard top 10
