@@ -1,5 +1,5 @@
 // =========================================================
-// ETC — Configuration
+// ETTLQ — Configuration
 // After deploying Code.gs as a Google Apps Script Web App,
 // paste your deployment URL below.
 // =========================================================
@@ -9,8 +9,8 @@ const CONFIG = {
   APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzqbisW6pGotXVCsCzLXIC3JCetgS24y_fcDoLqOA93QgaaxqQIcDgY4DfkPKMu8IbQuw/exec",
 
   // App metadata
-  APP_NAME: "Entrepreneurial Teaching Canvas",
-  APP_SHORT: "ETC",
+  APP_NAME: "Entrepreneurial Teaching & Transformative Learning Quotient",
+  APP_SHORT: "ETTLQ",
   VERSION: "1.0",
 
   // Assessment settings

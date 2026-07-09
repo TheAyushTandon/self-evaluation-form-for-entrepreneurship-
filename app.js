@@ -1,5 +1,5 @@
 /* =========================================================
-   ETC — Application Logic
+   ETTLQ — Application Logic
    ========================================================= */
 
 // ── State ────────────────────────────────────────────────
@@ -8,7 +8,7 @@ const state = {
   currentQuestion: 0,
   faculty: { name: '', email: '', phone: '', department: '' },
   declaration: false,
-  answers: [],           // { id, dimension, label, score, recommendations }
+  answers: [],           // { id, dimension, label, score, color }
   startTime: null,
   result: null,
   leaderboard: [],
@@ -52,6 +52,16 @@ function getSvgIcon(iconName) {
   return icons[iconName] || `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>`;
 }
 
+// Helper: Shuffle Array
+function shuffleArray(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 // ── Screen navigation ────────────────────────────────────
 function showScreen(id) {
   $$('.screen').forEach(s => s.classList.remove('active'));
@@ -69,7 +79,6 @@ function updateProgressBar() {
     'screen-info': 1,
     'screen-declaration': 2,
     'screen-result': total,
-    'screen-leaderboard': total,
   };
   let done = map[state.currentScreen] !== undefined
     ? map[state.currentScreen]
@@ -170,18 +179,55 @@ function initDeclaration() {
 }
 
 // ── Questions ────────────────────────────────────────────
+function checkAllAnswered() {
+  return ETC_QUESTIONS.every(q => state.answers.some(a => a.id === q.id));
+}
+
+function renderQuestionGrid() {
+  const grid = $('question-navigator-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  
+  ETC_QUESTIONS.forEach((q, idx) => {
+    const item = document.createElement('div');
+    const isAttempted = state.answers.some(a => a.id === q.id);
+    const isActive = idx === state.currentQuestion;
+    
+    item.className = `q-grid-item ${isAttempted ? 'attempted' : ''} ${isActive ? 'active' : ''}`;
+    item.textContent = idx + 1;
+    
+    item.addEventListener('click', () => {
+      jumpToQuestion(idx);
+    });
+    grid.appendChild(item);
+  });
+}
+
+function jumpToQuestion(index) {
+  if (index < 0 || index >= ETC_QUESTIONS.length || index === state.currentQuestion) return;
+  const el = $('q-anim-wrapper');
+  
+  const direction = index > state.currentQuestion ? 'left' : 'right';
+  el.classList.add(direction === 'left' ? 'slide-out-left' : 'slide-out-right');
+  
+  setTimeout(() => {
+    state.currentQuestion = index;
+    renderQuestion();
+    el.className = `w-full ${direction === 'left' ? 'slide-in-right' : 'slide-in-left'}`;
+    el.offsetWidth; // Force reflow
+    el.className = 'w-full';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 380);
+}
+
 function renderQuestion() {
   const q   = ETC_QUESTIONS[state.currentQuestion];
   const num = state.currentQuestion + 1;
   const tot = ETC_QUESTIONS.length;
 
-  $('q-dimension').innerHTML = `
-    ${getSvgIcon(q.icon)}
-    <span class="dim-id">${q.id}</span>
-    <span>${q.dimension}</span>
-  `;
+  // Set header to show the Question Number
+  $('q-text').textContent = `Question Q${num}.`;
   $('q-counter').textContent = `${num} / ${tot}`;
-  $('q-text').textContent = q.question;
 
   // Options Stack
   const container = $('q-options');
@@ -189,15 +235,19 @@ function renderQuestion() {
 
   const prevAnswer = state.answers.find(a => a.id === q.id);
 
-  RESPONSE_OPTIONS.forEach((opt, idx) => {
+  // Shuffle the options to show them randomly
+  const shuffledOptions = shuffleArray(q.options);
+
+  shuffledOptions.forEach((opt, idx) => {
     const div = document.createElement('div');
     div.className = `option-card stagger-item`;
     div.style.animationDelay = `${idx * 90}ms`;
-    if (prevAnswer && prevAnswer.label === opt.label) div.classList.add('selected');
+    if (prevAnswer && prevAnswer.label === opt.text) div.classList.add('selected');
+    
+    // Custom option layout
     div.innerHTML = `
-      <div class="option-content">
-        <div class="option-label">${opt.label}</div>
-        <div class="option-desc">${opt.description}</div>
+      <div class="option-content" style="text-align: left; width: 100%; font-size: 0.95rem; line-height: 1.6; font-weight: 500;">
+        ${opt.text}
       </div>
     `;
     div.addEventListener('click', () => selectOption(q, opt, div));
@@ -209,6 +259,7 @@ function renderQuestion() {
   $('btn-q-next').textContent = num === tot ? 'Submit Assessment →' : 'Continue →';
   $('btn-q-next').disabled = !prevAnswer;
 
+  renderQuestionGrid();
   updateProgressBar();
 }
 
@@ -218,9 +269,9 @@ function selectOption(q, opt, el) {
   const answer = {
     id: q.id,
     dimension: q.dimension,
-    label: opt.label,
-    score: opt.score,
-    recommendations: q.recommendations,
+    label: opt.text,
+    score: Number(opt.score),
+    color: opt.color,
   };
   if (existing >= 0) state.answers[existing] = answer;
   else state.answers.push(answer);
@@ -230,6 +281,8 @@ function selectOption(q, opt, el) {
   if (el) el.classList.add('selected');
   $('btn-q-next').disabled = false;
 
+  renderQuestionGrid();
+
   // Auto-advance after short delay on non-last questions
   if (state.currentQuestion < ETC_QUESTIONS.length - 1) {
     setTimeout(() => advanceQuestion(), 550);
@@ -238,21 +291,28 @@ function selectOption(q, opt, el) {
 
 function advanceQuestion() {
   const answered = state.answers.find(a => a.id === ETC_QUESTIONS[state.currentQuestion].id);
-  if (!answered) return;
 
   if (state.currentQuestion < ETC_QUESTIONS.length - 1) {
+    if (!answered) return;
     const el = $('q-anim-wrapper');
     el.classList.add('slide-out-left');
     setTimeout(() => {
       state.currentQuestion++;
       renderQuestion();
       el.className = 'w-full slide-in-right';
-      el.offsetWidth; // Force layout recalculation (reflow)
+      el.offsetWidth; // Force reflow
       el.className = 'w-full';
       $('screen-question').scrollTop = 0;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 380);
   } else {
+    // Check if all questions are answered before submitting
+    if (!checkAllAnswered()) {
+      const firstUnansweredIdx = ETC_QUESTIONS.findIndex(q => !state.answers.some(a => a.id === q.id));
+      showErrorToast(`Please answer all questions before submitting. Directing you to unanswered Question Q${firstUnansweredIdx + 1}.`);
+      jumpToQuestion(firstUnansweredIdx);
+      return;
+    }
     submitAssessment();
   }
 }
@@ -265,7 +325,7 @@ function goBackQuestion() {
       state.currentQuestion--;
       renderQuestion();
       el.className = 'w-full slide-in-left';
-      el.offsetWidth; // Force layout recalculation (reflow)
+      el.offsetWidth; // Force reflow
       el.className = 'w-full';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 380);
@@ -325,22 +385,16 @@ async function submitAssessment() {
 
 // Demo/offline result builder
 function buildLocalResult(answers, completionTime) {
-  const total = answers.reduce((s, a) => s + a.score, 0);
+  const total = answers.reduce((s, a) => s + Number(a.score), 0);
   const profile = getTeachingProfile(total);
-  const strengths = answers.filter(a => a.score === 3).map(a => a.dimension);
-  const growthDims = answers.filter(a => a.score === -1);
-  const recommendations = growthDims.map(a => ({ dimension: a.dimension, tips: a.recommendations }));
 
   return {
     success: true,
-    submissionId: 'ETC-DEMO',
+    submissionId: 'ETTLQ-DEMO-' + Math.floor(10000 + Math.random() * 90000),
     score: total,
     rank: 1,
     participants: 1,
     profile: profile.title,
-    strengths,
-    growthAreas: growthDims.map(a => a.dimension),
-    recommendations,
     leaderboard: [{
       rank: 1, name: state.faculty.name,
       department: state.faculty.department, score: total, profile: profile.title
@@ -367,141 +421,62 @@ function renderResult(r) {
     fill.style.width = Math.max(0, pct) + '%';
   }, 200);
 
-  // Profile
-  $('result-profile-badge').innerHTML = `
-    <span>${profile.title}</span>
-  `;
-  $('result-profile-desc').textContent = profile.description;
+  // Profile Badge
+  $('result-profile-badge').innerHTML = `<span>${profile.title}</span>`;
 
-  // Submission ID
-  $('result-sub-id').textContent = r.submissionId;
+  // Profile Remarks Card
+  $('remarks-title').textContent = profile.title;
+  $('remarks-interpretation').textContent = profile.description;
+  $('remarks-wayforward').textContent = profile.wayForward;
 
-  // Stats row
-  $('stat-max').textContent = CONFIG.MAX_SCORE;
-  $('stat-pct').textContent = Math.round(pct) + '%';
-  $('stat-parts').textContent = r.participants;
+  // Render Detailed Answer Key
+  const akWrap = $('result-answer-key');
+  akWrap.innerHTML = '';
 
-  // Strengths
-  const strWrap = $('result-strengths');
-  strWrap.innerHTML = '';
-  if (r.strengths && r.strengths.length) {
-    r.strengths.forEach(s => {
-      const chip = document.createElement('span');
-      chip.className = 'chip chip-green'; chip.textContent = s;
-      strWrap.appendChild(chip);
-    });
-  } else {
-    strWrap.innerHTML = '<span class="chip">Strengths are building!</span>';
-  }
+  ETC_QUESTIONS.forEach(q => {
+    const myAns = state.answers.find(a => a.id === q.id);
+    const selectedText = myAns ? myAns.label : '';
 
-  // Growth areas
-  const growWrap = $('result-growth');
-  growWrap.innerHTML = '';
-  if (r.growthAreas && r.growthAreas.length) {
-    r.growthAreas.slice(0, 6).forEach(g => {
-      const chip = document.createElement('span');
-      chip.className = 'chip'; chip.textContent = g;
-      growWrap.appendChild(chip);
-    });
-  } else {
-    growWrap.innerHTML = '<span class="chip chip-green">Outstanding! No critical growth gaps found.</span>';
-  }
+    const greenOpt = q.options.find(o => o.color === 'green');
+    const yellowOpt = q.options.find(o => o.color === 'yellow');
+    const redOpt = q.options.find(o => o.color === 'red');
 
-  // Recommendations
-  const recWrap = $('result-recs');
-  recWrap.innerHTML = '';
-  if (r.recommendations && r.recommendations.length) {
-    r.recommendations.slice(0, 5).forEach(rec => {
-      const qObj = ETC_QUESTIONS.find(q => q.dimension === rec.dimension);
-      const iconHtml = qObj ? getSvgIcon(qObj.icon) : '';
-      const card = document.createElement('div');
-      card.className = 'rec-card stagger-item';
-      card.innerHTML = `<div class="rec-dimension" style="display:flex;align-items:center;gap:8px;">${iconHtml}<span>${rec.dimension}</span></div>` +
-        rec.tips.map(t => `<div class="rec-tip">${t}</div>`).join('');
-      recWrap.appendChild(card);
-    });
-  }
+    const isGreenSelected = selectedText === greenOpt.text;
+    const isYellowSelected = selectedText === yellowOpt.text;
+    const isRedSelected = selectedText === redOpt.text;
+
+    const item = document.createElement('div');
+    item.className = 'review-item';
+    item.innerHTML = `
+      <div class="review-header">
+        <span class="review-dimension-title">${getSvgIcon(q.icon)} ${q.id}. ${q.dimension}</span>
+      </div>
+      <div class="review-options-list">
+        <div class="review-option green-opt ${isGreenSelected ? 'selected-ans' : ''}">
+          <span style="font-size:1.1rem; line-height:1; flex-shrink:0;">🟢</span>
+          <span style="flex:1;">${greenOpt.text}</span>
+          ${isGreenSelected ? '<span class="selection-badge">Your Choice</span>' : ''}
+        </div>
+        <div class="review-option yellow-opt ${isYellowSelected ? 'selected-ans' : ''}">
+          <span style="font-size:1.1rem; line-height:1; flex-shrink:0;">🟡</span>
+          <span style="flex:1;">${yellowOpt.text}</span>
+          ${isYellowSelected ? '<span class="selection-badge">Your Choice</span>' : ''}
+        </div>
+        <div class="review-option red-opt ${isRedSelected ? 'selected-ans' : ''}">
+          <span style="font-size:1.1rem; line-height:1; flex-shrink:0;">🔴</span>
+          <span style="flex:1;">${redOpt.text}</span>
+          ${isRedSelected ? '<span class="selection-badge">Your Choice</span>' : ''}
+        </div>
+      </div>
+    `;
+    akWrap.appendChild(item);
+  });
 
   // Leaderboard
   renderLeaderboard(r.leaderboard, r.submissionId);
 
-  // Populate Certificate Data
-  $('cert-faculty-name').textContent = state.faculty.name;
-  $('cert-profile-title').textContent = profile.title;
-  $('cert-score').textContent = `${r.score} / ${CONFIG.MAX_SCORE}`;
-  $('cert-date').textContent = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-  $('cert-verification-id').textContent = r.submissionId;
-
-  // Wire Download Buttons
-  $('btn-download-cert').onclick = () => window.print();
-  $('btn-download-report').onclick = () => downloadReport(r);
-
   // Confetti
   launchConfetti();
-}
-
-function downloadReport(r) {
-  const profile = getTeachingProfile(r.score);
-  const timestamp = new Date().toLocaleString();
-
-  let text = `=========================================================
-ENTREPRENEURIAL TEACHING CANVAS (ETC) REPORT
-=========================================================
-
-FACULTY DETAILS:
-Name:        ${state.faculty.name}
-Department:  ${state.faculty.department}
-Email:       ${state.faculty.email}
-Phone:       ${state.faculty.phone}
-Date/Time:   ${timestamp}
-Submission:  ${r.submissionId}
-
----------------------------------------------------------
-ASSESSMENT SUMMARY:
-Total Score: ${r.score} / 78
-Rank:        #${r.rank} out of ${r.participants} participants
-Profile:     ${profile.title}
-
----------------------------------------------------------
-PROFILE DESCRIPTION:
-${profile.description}
-
----------------------------------------------------------
-STRENGTHS:
-${r.strengths && r.strengths.length ? r.strengths.map(s => `+ ${s}`).join('\n') : 'No primary strengths identified yet.'}
-
----------------------------------------------------------
-GROWTH OPPORTUNITIES:
-${r.growthAreas && r.growthAreas.length ? r.growthAreas.map(g => `- ${g}`).join('\n') : 'No immediate growth gaps identified.'}
-
----------------------------------------------------------
-RECOMMENDED ACTION ITEMS:
-`;
-
-  if (r.recommendations && r.recommendations.length) {
-    r.recommendations.forEach(rec => {
-      text += `\n* ${rec.dimension}:\n`;
-      rec.tips.forEach(tip => {
-        text += `  - ${tip}\n`;
-      });
-    });
-  } else {
-    text += '\nKeep up the excellent practice!';
-  }
-
-  text += `\n=========================================================
-Report generated by Entrepreneurial Teaching Canvas Platform.
-=========================================================`;
-
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `ETC_Assessment_Report_${state.faculty.name.replace(/\s+/g, '_')}.txt`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 }
 
 function renderLeaderboard(lb, myId) {

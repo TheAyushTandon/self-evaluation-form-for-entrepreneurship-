@@ -1,5 +1,5 @@
 // =========================================================
-// ETC — Google Apps Script Backend
+// ETTLQ — Google Apps Script Backend
 // Deploy this as a Web App via Extensions → Apps Script
 // Execution: Anyone | Access: Anyone (anonymous)
 // =========================================================
@@ -15,8 +15,8 @@
 //
 // =========================================================
 
-const SHEET_NAME = "ETC_Responses";
-const SUBMISSION_PREFIX = "ETC-";
+const SHEET_NAME = "ETTLQ_Responses";
+const SUBMISSION_PREFIX = "ETTLQ-";
 
 // ── Column definitions ────────────────────────────────────
 function getHeaders() {
@@ -33,7 +33,7 @@ function getHeaders() {
   const questionHeaders = [];
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   letters.forEach((l) => {
-    questionHeaders.push(`${l} Label`);
+    questionHeaders.push(`${l} Selected Text`);
     questionHeaders.push(`${l} Score`);
   });
 
@@ -83,30 +83,22 @@ function getNextSubmissionId(sheet) {
 
 // ── Score calculation ─────────────────────────────────────
 function calculateScore(answers) {
-  const scoreMap = {
-    "Consistently Practice": 3,
-    "Occasionally Practice": 1,
-    "Opportunity for Growth": -1,
-  };
-  return answers.reduce((total, a) => total + (scoreMap[a.label] || 0), 0);
+  return answers.reduce((total, a) => total + (a.score !== undefined ? Number(a.score) : 0), 0);
 }
 
 // ── Profile determination ─────────────────────────────────
 function getTeachingProfile(score) {
-  if (score >= 65) return "Innovation Champion";
-  if (score >= 40) return "Growth-Oriented Educator";
-  return "Emerging Entrepreneurial Practitioner";
+  if (score > 60) return "The Entrepreneurial Educator facilitating a Transformative Learning Lab";
+  if (score >= 40) return "The Transitioning Launchpad";
+  return "The Spark Phase";
 }
 
 // ── Strengths & Growth Areas ──────────────────────────────
 function analyzeAnswers(answers) {
-  const scoreMap = { "Consistently Practice": 3, "Occasionally Practice": 1, "Opportunity for Growth": -1 };
-
   const scored = answers.map((a) => ({
     dimension: a.dimension,
-    score: scoreMap[a.label] || 0,
+    score: a.score !== undefined ? Number(a.score) : 0,
     label: a.label,
-    recommendations: a.recommendations || [],
   }));
 
   scored.sort((a, b) => b.score - a.score);
@@ -114,20 +106,9 @@ function analyzeAnswers(answers) {
   const strengths = scored.filter((a) => a.score === 3).map((a) => a.dimension);
   const growthAreas = scored.filter((a) => a.score === -1);
 
-  const recommendations = [];
-  growthAreas.forEach((area) => {
-    if (area.recommendations && area.recommendations.length > 0) {
-      recommendations.push({
-        dimension: area.dimension,
-        tips: area.recommendations,
-      });
-    }
-  });
-
   return {
     strengths,
     growthAreas: growthAreas.map((a) => a.dimension),
-    recommendations,
   };
 }
 
@@ -136,7 +117,7 @@ function buildLeaderboard(sheet) {
   const lastRow = sheet.getLastRow();
   if (lastRow <= 1) return [];
 
-  const totalScoreCol = 7 + 26 * 2 + 1; // after base(7) + question cols(52) = col 60
+  const totalScoreCol = 7 + 26 * 2 + 1; // base(7) + question cols(52) = col 60
   const data = sheet.getRange(2, 1, lastRow - 1, totalScoreCol + 4).getValues();
 
   const entries = data
@@ -267,23 +248,23 @@ function doPost(e) {
       return corsOutput({ success: false, error: "Missing faculty information." });
     }
     if (!declaration) {
-      return corsOutput({ success: false, error: "Declaration not accepted." });
+      return corsOutput({ success: false, error: "Declaration / Consent not accepted." });
     }
     if (!answers || answers.length !== 26) {
       return corsOutput({ success: false, error: "Incomplete assessment. All 26 questions are required." });
     }
 
-    const validLabels = ["Consistently Practice", "Occasionally Practice", "Opportunity for Growth"];
     for (const a of answers) {
-      if (!validLabels.includes(a.label)) {
-        return corsOutput({ success: false, error: `Invalid response: "${a.label}"` });
+      const s = Number(a.score);
+      if (s !== 3 && s !== 1 && s !== -1) {
+        return corsOutput({ success: false, error: `Invalid response score: "${a.score}"` });
       }
     }
 
     // --- Scoring ---
     const totalScore = calculateScore(answers);
     const profile = getTeachingProfile(totalScore);
-    const { strengths, growthAreas, recommendations } = analyzeAnswers(answers);
+    const { strengths, growthAreas } = analyzeAnswers(answers);
 
     // --- Sheet ---
     const sheet = initSheet();
@@ -302,10 +283,9 @@ function doPost(e) {
     ];
 
     // Add each answer (label + score)
-    const scoreMap = { "Consistently Practice": 3, "Occasionally Practice": 1, "Opportunity for Growth": -1 };
     answers.forEach((a) => {
       row.push(a.label);
-      row.push(scoreMap[a.label]);
+      row.push(a.score);
     });
 
     // Tail columns
@@ -344,7 +324,6 @@ function doPost(e) {
       profile,
       strengths,
       growthAreas,
-      recommendations,
       leaderboard,
     });
   } catch (err) {
