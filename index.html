@@ -236,18 +236,7 @@
         <div class="card card-glow text-center stagger-item" style="margin-bottom:20px;">
           <span class="overline">Your ETTLQ Score</span>
 
-          <div class="score-big stagger-item" id="result-score-num" style="color:var(--accent);">0</div>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:20px;">out of 78 points</p>
-
-          <div class="score-meter-container">
-            <div class="score-meter-track">
-              <div class="score-meter-fill" id="result-meter-fill" style="width:0%;"></div>
-            </div>
-            <div class="score-labels">
-              <span>−26 (min)</span>
-              <span>+78 (max)</span>
-            </div>
-          </div>
+          <div class="score-big stagger-item" id="result-score-num" style="color:var(--accent); margin-bottom: 20px;">0</div>
 
           <div style="display:flex;justify-content:center;margin-top:16px;">
             <div class="profile-badge" id="result-profile-badge">
@@ -260,7 +249,7 @@
         <div class="card stagger-item mb-20" id="result-remarks-card">
           <div
             style="font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">
-            ETTLQ Profile & Guidance</div>
+            what does my ETTLQ Score mean?</div>
           <h3 class="headline" id="remarks-title" style="margin-bottom:16px; font-size: 1.4rem;">Remarks</h3>
 
           <div class="divider" style="margin-bottom:16px;"></div>
@@ -282,14 +271,26 @@
           </div>
         </div>
 
-        <!-- Detailed Answer Key -->
+        <!-- Diagnostic Review -->
         <div class="card stagger-item mb-20">
-          <span class="overline" style="margin-bottom:12px;display:block;">Diagnostic Review & Answer Key</span>
-          <p
-            style="font-size:0.88rem;color:var(--text-secondary);line-height:1.6;margin-bottom:20px; text-align: left;">
-            Here is how your choices align with the teaching style parameters (🟢 Green = +3, 🟡 Yellow = +1, 🔴 Red =
-            -1).
-          </p>
+          <span class="overline" style="margin-bottom:12px;display:block;">Diagnostic Review</span>
+          
+          <div class="legend-box" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; padding: 16px; background: var(--bg-primary); border-radius: var(--radius-sm); border: 1px solid var(--border); text-align: left;">
+            <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-primary); letter-spacing: 0.5px; display: block; margin-bottom: 4px;">What does each color mean?</span>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.4;">
+              <span style="font-size: 1.1rem; line-height: 1; flex-shrink: 0;">🟢</span>
+              <span><strong>Green:</strong> Absolutely like an entrepreneurial Educator</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.4;">
+              <span style="font-size: 1.1rem; line-height: 1; flex-shrink: 0;">🟡</span>
+              <span><strong>Yellow:</strong> Somewhat like an entrepreneurial Educator</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.4;">
+              <span style="font-size: 1.1rem; line-height: 1; flex-shrink: 0;">🔴</span>
+              <span><strong>Red:</strong> Totally unlike an entrepreneurial Educator</span>
+            </div>
+          </div>
+
           <div id="result-answer-key" style="display:flex;flex-direction:column;gap:24px; text-align: left;"></div>
         </div>
 

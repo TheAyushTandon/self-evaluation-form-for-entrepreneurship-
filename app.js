@@ -9,6 +9,7 @@ const state = {
   faculty: { name: '', email: '', phone: '', department: '' },
   declaration: false,
   answers: [],           // { id, dimension, label, score, color }
+  shuffledQuestions: null,
   startTime: null,
   result: null,
 };
@@ -160,6 +161,15 @@ function initDeclaration() {
     state.startTime = Date.now();
     state.currentQuestion = 0;
     state.answers = [];
+    
+    // Shuffle options for all questions once per attempt
+    state.shuffledQuestions = ETC_QUESTIONS.map(q => {
+      return {
+        ...q,
+        shuffledOptions: shuffleArray(q.options)
+      };
+    });
+    
     renderQuestion();
     showScreen('screen-question');
   });
@@ -208,9 +218,10 @@ function jumpToQuestion(index) {
 }
 
 function renderQuestion() {
-  const q   = ETC_QUESTIONS[state.currentQuestion];
+  const questionsList = state.shuffledQuestions || ETC_QUESTIONS;
+  const q   = questionsList[state.currentQuestion];
   const num = state.currentQuestion + 1;
-  const tot = ETC_QUESTIONS.length;
+  const tot = questionsList.length;
 
   // Set header to show the Question Number
   $('q-text').textContent = `Question Q${num}.`;
@@ -222,10 +233,10 @@ function renderQuestion() {
 
   const prevAnswer = state.answers.find(a => a.id === q.id);
 
-  // Shuffle the options to show them randomly
-  const shuffledOptions = shuffleArray(q.options);
+  // Use pre-shuffled options if available
+  const optionsToRender = q.shuffledOptions || shuffleArray(q.options);
 
-  shuffledOptions.forEach((opt, idx) => {
+  optionsToRender.forEach((opt, idx) => {
     const div = document.createElement('div');
     div.className = `option-card stagger-item`;
     div.style.animationDelay = `${idx * 90}ms`;
@@ -277,9 +288,10 @@ function selectOption(q, opt, el) {
 }
 
 function advanceQuestion() {
-  const answered = state.answers.find(a => a.id === ETC_QUESTIONS[state.currentQuestion].id);
+  const questionsList = state.shuffledQuestions || ETC_QUESTIONS;
+  const answered = state.answers.find(a => a.id === questionsList[state.currentQuestion].id);
 
-  if (state.currentQuestion < ETC_QUESTIONS.length - 1) {
+  if (state.currentQuestion < questionsList.length - 1) {
     if (!answered) return;
     const el = $('q-anim-wrapper');
     el.classList.add('slide-out-left');
@@ -295,7 +307,7 @@ function advanceQuestion() {
   } else {
     // Check if all questions are answered before submitting
     if (!checkAllAnswered()) {
-      const firstUnansweredIdx = ETC_QUESTIONS.findIndex(q => !state.answers.some(a => a.id === q.id));
+      const firstUnansweredIdx = questionsList.findIndex(q => !state.answers.some(a => a.id === q.id));
       showErrorToast(`Please answer all questions before submitting. Directing you to unanswered Question Q${firstUnansweredIdx + 1}.`);
       jumpToQuestion(firstUnansweredIdx);
       return;
@@ -386,17 +398,10 @@ function buildLocalResult(answers, completionTime) {
 // ── Result screen ─────────────────────────────────────────
 function renderResult(r) {
   const profile = getTeachingProfile(r.score);
-  const pct = ((r.score - CONFIG.MIN_SCORE) / (CONFIG.MAX_SCORE - CONFIG.MIN_SCORE)) * 100;
 
   // Score big
   const scoreEl = $('result-score-num');
   animateCounter(scoreEl, 0, r.score, 1200);
-
-  // Meter
-  setTimeout(() => {
-    const fill = $('result-meter-fill');
-    fill.style.width = Math.max(0, pct) + '%';
-  }, 200);
 
   // Profile Badge
   $('result-profile-badge').innerHTML = `<span>${profile.title}</span>`;
