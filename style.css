@@ -58,7 +58,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* â”€â”€ Background accents â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Background accents ─────────────────────────────────── */
 body::before {
   content: '';
   position: fixed;
@@ -66,29 +66,25 @@ body::before {
   z-index: 0;
   background:
     radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.04) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 45%);
+    radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 45%),
+    linear-gradient(
+      135deg,
+      #f8f9fa 0%,
+      #f0fdf4 30%,
+      #f0f9ff 50%,
+      #f0fdf4 70%,
+      #f8f9fa 100%
+    );
+  background-size: 400% 400%;
+  animation: gradientDrift 25s ease infinite;
   pointer-events: none;
 }
 
-/* ── Landing moving gradient ─────────────────────────────── */
+/* ── Landing moving gradient animation ───────────────────── */
 @keyframes gradientDrift {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
-}
-
-#screen-landing {
-  background:
-    linear-gradient(
-      135deg,
-      #f8f9fa 0%,
-      #f0fdf8 25%,
-      #f8f9fa 50%,
-      #ecfdf5 75%,
-      #f8f9fa 100%
-    );
-  background-size: 300% 300%;
-  animation: gradientDrift 18s ease infinite;
 }
 
 /* â”€â”€ App shell â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
