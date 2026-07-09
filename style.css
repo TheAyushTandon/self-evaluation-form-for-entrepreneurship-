@@ -402,36 +402,6 @@ body::before {
 .rec-tip:last-child { border-bottom: none; }
 .rec-tip::before { content: '•'; color: var(--accent); font-weight: bold; font-size: 1.1rem; line-height: 0.8; margin-top: 2px; }
 
-/* ── Leaderboard ────────────────────────────────────────── */
-.leaderboard-row {
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 18px;
-  border-radius: var(--radius-md);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  transition: var(--transition);
-}
-.leaderboard-row:hover { background: var(--bg-card-hover); }
-.leaderboard-row.is-me {
-  border-color: var(--accent);
-  background: var(--accent-light);
-}
-.lb-rank {
-  font-family: 'Dosis', sans-serif;
-  font-size: 1rem; font-weight: 700; width: 28px;
-  text-align: center; color: var(--text-muted);
-}
-.lb-rank.top1 { color: #d97706; }
-.lb-rank.top2 { color: #64748b; }
-.lb-rank.top3 { color: #b45309; }
-.lb-info { flex: 1; min-width: 0; }
-.lb-name { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
-.lb-dept { font-size: 0.75rem; color: var(--text-secondary); }
-.lb-score {
-  font-family: 'Dosis', sans-serif;
-  font-size: 1.1rem; font-weight: 700;
-  color: var(--accent-hover);
-}
 
 /* ── Submit animation overlay ───────────────────────────── */
 #submit-overlay {

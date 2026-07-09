@@ -55,7 +55,6 @@
       <div class="flex gap-8 stagger-item" style="flex-wrap:wrap;justify-content:center;margin-bottom:40px;">
         <div class="feature-pill"><span>26 Dimensions</span></div>
         <div class="feature-pill"><span>~10 minutes</span></div>
-        <div class="feature-pill"><span>Live Leaderboard</span></div>
         <div class="feature-pill"><span id="landing-participants">Faculty Portal</span></div>
       </div>
 
@@ -63,7 +62,7 @@
         Begin Assessment →
       </button>
 
-      <div class="mt-40 w-full" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center;">
+      <div class="mt-40 w-full" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;text-align:center;">
         <div class="card card-sm stagger-item">
           <div style="font-size:0.9rem;font-weight:700;margin-bottom:6px;color:var(--accent);">Reflection</div>
           <div style="font-size:0.78rem;color:var(--text-secondary);">Honest evaluation of 26 core teaching style options</div>
@@ -71,10 +70,6 @@
         <div class="card card-sm stagger-item">
           <div style="font-size:0.9rem;font-weight:700;margin-bottom:6px;color:var(--accent);">Insights</div>
           <div style="font-size:0.78rem;color:var(--text-secondary);">Instant quotient score, profile, and interpretation</div>
-        </div>
-        <div class="card card-sm stagger-item">
-          <div style="font-size:0.9rem;font-weight:700;margin-bottom:6px;color:var(--accent);">Leaderboard</div>
-          <div style="font-size:0.78rem;color:var(--text-secondary);">See how your profile compares with colleagues</div>
         </div>
       </div>
 
@@ -89,7 +84,7 @@
       <span class="overline">Step 1 of 3</span>
       <h2 class="headline mb-8">Your Information</h2>
       <p class="subheadline mb-24" style="max-width:460px;">
-        Your details are used only to personalise your assessment and leaderboard profile.
+        Your details are used only to personalise your assessment results.
       </p>
 
       <div class="card">
@@ -216,7 +211,6 @@
       <!-- Score card block -->
       <div class="card card-glow text-center stagger-item" style="margin-bottom:20px;">
         <span class="overline">Your ETTLQ Score</span>
-        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;" id="result-rank-line"></p>
 
         <div class="score-big stagger-item" id="result-score-num" style="color:var(--accent);">0</div>
         <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:20px;">out of 78 points</p>
@@ -263,12 +257,6 @@
           Here is how your choices align with the teaching style parameters (🟢 Green = +3, 🟡 Yellow = +1, 🔴 Red = -1).
         </p>
         <div id="result-answer-key" style="display:flex;flex-direction:column;gap:24px; text-align: left;"></div>
-      </div>
-
-      <!-- Leaderboard -->
-      <div class="stagger-item" style="margin-bottom:20px;">
-        <span class="overline" style="margin-bottom:12px;display:block;">Faculty Leaderboard</span>
-        <div style="display:flex;flex-direction:column;gap:8px;" id="result-leaderboard"></div>
       </div>
 
       <!-- Completion message -->

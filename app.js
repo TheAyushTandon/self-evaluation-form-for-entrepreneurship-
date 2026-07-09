@@ -11,7 +11,6 @@ const state = {
   answers: [],           // { id, dimension, label, score, color }
   startTime: null,
   result: null,
-  leaderboard: [],
 };
 
 // ── DOM refs ─────────────────────────────────────────────
@@ -94,18 +93,6 @@ function updateProgressBar() {
 // ── Landing ──────────────────────────────────────────────
 function initLanding() {
   $('btn-start').addEventListener('click', () => showScreen('screen-info'));
-  fetchLeaderboardPreview();
-}
-
-async function fetchLeaderboardPreview() {
-  if (!CONFIG.APPS_SCRIPT_URL || CONFIG.APPS_SCRIPT_URL.includes('YOUR_')) return;
-  try {
-    const res = await fetch(CONFIG.APPS_SCRIPT_URL);
-    const data = await res.json();
-    if (data.success && data.totalParticipants) {
-      $('landing-participants').textContent = data.totalParticipants + '+ Faculty';
-    }
-  } catch (_) { /* silent */ }
 }
 
 // ── Faculty Info ─────────────────────────────────────────
@@ -392,13 +379,7 @@ function buildLocalResult(answers, completionTime) {
     success: true,
     submissionId: 'ETTLQ-DEMO-' + Math.floor(10000 + Math.random() * 90000),
     score: total,
-    rank: 1,
-    participants: 1,
     profile: profile.title,
-    leaderboard: [{
-      rank: 1, name: state.faculty.name,
-      department: state.faculty.department, score: total, profile: profile.title
-    }],
   };
 }
 
@@ -406,10 +387,6 @@ function buildLocalResult(answers, completionTime) {
 function renderResult(r) {
   const profile = getTeachingProfile(r.score);
   const pct = ((r.score - CONFIG.MIN_SCORE) / (CONFIG.MAX_SCORE - CONFIG.MIN_SCORE)) * 100;
-
-  // Rank sentence
-  $('result-rank-line').textContent =
-    `You are ranked #${r.rank} out of ${r.participants} faculty member${r.participants !== 1 ? 's' : ''}.`;
 
   // Score big
   const scoreEl = $('result-score-num');
@@ -472,36 +449,10 @@ function renderResult(r) {
     akWrap.appendChild(item);
   });
 
-  // Leaderboard
-  renderLeaderboard(r.leaderboard, r.submissionId);
-
   // Confetti
   launchConfetti();
 }
 
-function renderLeaderboard(lb, myId) {
-  const wrap = $('result-leaderboard');
-  wrap.innerHTML = '';
-  if (!lb || lb.length === 0) {
-    wrap.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">No leaderboard data yet.</p>';
-    return;
-  }
-  lb.forEach(entry => {
-    const isMe = entry.submissionId === myId;
-    const rankClass = entry.rank === 1 ? 'top1' : entry.rank === 2 ? 'top2' : entry.rank === 3 ? 'top3' : '';
-    const row = document.createElement('div');
-    row.className = `leaderboard-row stagger-item${isMe ? ' is-me' : ''}`;
-    row.innerHTML = `
-      <div class="lb-rank ${rankClass}">#${entry.rank}</div>
-      <div class="lb-info">
-        <div class="lb-name">${entry.name}${isMe ? ' <span style="color:var(--accent);font-size:0.75rem;font-weight:bold;">(You)</span>' : ''}</div>
-        <div class="lb-dept">${entry.department}</div>
-      </div>
-      <div class="lb-score">${entry.score}</div>
-    `;
-    wrap.appendChild(row);
-  });
-}
 
 // ── Counter animation ────────────────────────────────────
 function animateCounter(el, from, to, duration) {
