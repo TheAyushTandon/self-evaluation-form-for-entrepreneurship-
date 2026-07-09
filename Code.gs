@@ -131,7 +131,7 @@ function doPost(e) {
       return corsOutput({ success: false, error: "Missing faculty information." });
     }
     if (!declaration) {
-      return corsOutput({ success: false, error: "Declaration / Consent not accepted." });
+      return corsOutput({ success: false, error: "Declaration not accepted." });
     }
     if (!answers || answers.length !== 26) {
       return corsOutput({ success: false, error: "Incomplete assessment. All 26 questions are required." });
